@@ -2,13 +2,20 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback, BaseCallback
+
 import csv
 import numpy as np
 import argparse
 import json
 import os
+import wandb
+from wandb.integration.sb3 import WandbCallback
+
 
 from KitchenEnv import KitchenEnv
+
+# Initialize W&B
+wandb.init(project="Force_space_kitchen")
 
 
 def make_env(env_id):
@@ -88,6 +95,9 @@ def main():
 
     checkpoint_callback = CheckpointCallback(save_freq=1000, save_path='./logs/',
                                             name_prefix='rl_model')
+    
+    # W&B callback
+    wandb_callback = WandbCallback()
 
     tensorboard_log = "./ppo_kitchen_tensorboard/"
 
@@ -95,7 +105,7 @@ def main():
     model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=tensorboard_log)
 
     # Train model
-    model.learn(total_timesteps=25000, callback=[eval_callback, checkpoint_callback] + csv_logger_callbacks)
+    model.learn(total_timesteps=25000, callback=[eval_callback, checkpoint_callback, wandb_callback] + csv_logger_callbacks)
 
     # Save the model
     model.save("ppo_kitchen")
