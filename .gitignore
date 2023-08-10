@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info
+*.cache
+*.so
+
+# Logs
+logs/
+
+# TensorBoard
+ppo_kitchen_tensorboard/
+
+# VS Code settings and extensions
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# Other unwanted files
+*.swp
+*.swo
+*.swn
